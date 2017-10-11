@@ -23,7 +23,8 @@ const AuthorType = new GraphQLObjectType({
     description: "This represent an author",
     fields: () => ({
       id: {type: new GraphQLNonNull(GraphQLString)},
-      name: {type: new GraphQLNonNull(GraphQLString)},
+      firstName: {type: new GraphQLNonNull(GraphQLString)},
+      lastName: {type: new GraphQLNonNull(GraphQLString)},      
       twitterHandle: {type: GraphQLString}
     })
   });
