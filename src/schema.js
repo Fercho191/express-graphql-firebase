@@ -3,10 +3,8 @@ const _ = require('lodash');
 const Authors = require('./data/authors'); // This is to make available authors.json file
 const Posts = require('./data/posts'); // This is to make available post.json file
 
-/* Here a simple schema is constructed without using the GraphQL query language. 
-  e.g. using 'new GraphQLObjectType' to create an object type 
-*/
-
+const AuthorType = require('./types/author');
+const PostType = require('./types/post');
 let {
   // These are the basic GraphQL types need in this tutorial
   GraphQLString,
@@ -18,37 +16,10 @@ let {
   GraphQLSchema,
 } = require('graphql');
 
-const AuthorType = new GraphQLObjectType({
-    name: "Author",
-    description: "This represent an author",
-    fields: () => ({
-      id: {type: new GraphQLNonNull(GraphQLString)},
-      firstName: {type: new GraphQLNonNull(GraphQLString)},
-      lastName: {type: new GraphQLNonNull(GraphQLString)},      
-      twitterHandle: {type: GraphQLString}
-    })
-  });
-
-  const PostType = new GraphQLObjectType({
-    name: "Post",
-    description: "This represent a Post",
-    fields: () => ({
-      id: {type: new GraphQLNonNull(GraphQLString)},
-      title: {type: new GraphQLNonNull(GraphQLString)},
-      body: {type: GraphQLString},
-      author: {
-        type: AuthorType,
-        resolve: function(post) {
-          return _.find(Authors, a => a.id == post.author_id);
-        }
-      }
-    })
-  });
-
   // This is the Root Query
-const BlogQueryRootType = new GraphQLObjectType({
-    name: 'BlogAppSchema',
-    description: "Blog Application Schema Query Root",
+const QueryRootType = new GraphQLObjectType({
+    name: 'QueryRootType',
+    description: "Application Schema Query Root",
     fields: () => ({
       authors: {
         type: new GraphQLList(AuthorType),
@@ -68,12 +39,12 @@ const BlogQueryRootType = new GraphQLObjectType({
   });
 
   // This is the schema declaration
-const BlogAppSchema = new GraphQLSchema({
-    query: BlogQueryRootType
+const AppSchema = new GraphQLSchema({
+    query: QueryRootType
     // If you need to create or updata a datasource, 
     // you use mutations. Note:
     // mutations will not be explored in this post.
     // mutation: BlogMutationRootType 
   });
 
-module.exports = BlogAppSchema
+module.exports = AppSchema
