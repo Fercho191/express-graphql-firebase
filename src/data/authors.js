@@ -1,22 +1,22 @@
-const Authors = [
-    {
-      id: '8dlx7ak38fd39dv79ad', 
-      firstName: 'Orinami',
-      lastName: 'Olatunji',
-      twitterHandle: '@orinami_'
-    },
-    {
-      id: 'jd3kd03d0w9a0l35rh74', 
-      firstName: 'Ojima',
-      lastName: 'Udale',
-      twitterHandle: '@uncooloj'
-    },
-    {
-      id: '0hy894hf0dlkfh9oinv', 
-      firstName: 'Xabi',
-      lastName: 'Alonso',
-      twitterHandle: '@alonso'
-    }
-  ];
-  
-  module.exports = Authors;
+const firebaseDB = require('../fireadmin');
+
+let ref  = firebaseDB.ref("authors");
+let Authors = [];
+
+ref.on("child_changed", (snapshot) => {
+  let item = snapshot.val();
+  item.id = snapshot.key
+  let index = Authors.findIndex((author) => {
+    return author.id == item.id
+  }, item.id);
+  Authors[index] = item;
+});
+
+ref.on("child_added", (snapshot) => {
+  let item = snapshot.val();
+  item.id = snapshot.key
+  Authors.push(item) 
+});
+
+
+module.exports = Authors; 

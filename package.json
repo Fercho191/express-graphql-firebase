@@ -12,6 +12,7 @@
   "dependencies": {
     "express": "^4.16.2",
     "express-graphql": "^0.6.11",
+    "firebase-admin": "^5.4.3",
     "graphql": "^0.11.7",
     "lodash": "^4.17.4"
   },
