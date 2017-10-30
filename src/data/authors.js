@@ -10,12 +10,14 @@ ref.on("child_changed", (snapshot) => {
     return author.id == item.id
   }, item.id);
   Authors[index] = item;
+  console.log("Author updated:", snapshot.key)
 });
 
 ref.on("child_added", (snapshot) => {
   let item = snapshot.val();
   item.id = snapshot.key;
-  Authors.push(item) 
+  Authors.push(item)
+  console.log("Author added:", snapshot.key)
 });
 
 ref.on("child_removed", (snapshot) => {
@@ -25,5 +27,12 @@ ref.on("child_removed", (snapshot) => {
     return author.id == item.id
   }, item.id);
   Authors.splice(index, 1);
-})
+  console.log("Author removed:", snapshot.key)  
+});
+
+// Se ejecuta una sola vez
+ref.once("value", (snapshot) => {
+  console.log("Authors data loaded:", snapshot.numChildren() === Authors.length);
+});
+
 module.exports = Authors; 
