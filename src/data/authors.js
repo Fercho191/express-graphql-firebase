@@ -35,4 +35,16 @@ ref.once("value", (snapshot) => {
   console.log("Authors data loaded:", snapshot.numChildren() === Authors.length);
 });
 
-module.exports = Authors; 
+const createAuthor = author => {
+  ref.child(author.firstName+'-'+author.lastName).set({
+    firstName: author.firstName,
+    lastName: author.lastName,
+    twitterHandle: author.twitterHandle
+  })
+  return author
+}
+
+module.exports = {
+  Authors,
+  createAuthor
+}; 
