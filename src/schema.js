@@ -1,6 +1,6 @@
 const _ = require('lodash');
 
-const {Authors, createAuthor} = require('./data/authors'); // This is to make available authors.json file
+const {Authors, createAuthor, deleteAuthor} = require('./data/authors'); // This is to make available authors.json file
 const Posts = require('./data/posts'); // This is to make available post.json file
 
 const {AuthorType, AuthorInputType} = require('./types/author');
@@ -12,6 +12,7 @@ let {
   GraphQLObjectType,
   GraphQLInputObjectType,
   GraphQLID,
+  GraphQLBoolean,
   // This is used to create required fileds and arguments
   GraphQLNonNull,
   // This is the class we need to create the schema
@@ -67,6 +68,16 @@ const MutationRootType = new GraphQLObjectType({
         args.author.id = args.id
         console.log(args.author)
         return args.author
+      }
+    },
+    deleteAuthor: {
+      type: GraphQLBoolean,
+      description: "Delete a author",
+      args: {
+        id: {type:  GraphQLString, name: "success" } 
+      },
+      resolve: function(source, args, context, info){
+        return deleteAuthor(args.id)
       }
     }
   }

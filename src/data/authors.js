@@ -44,7 +44,19 @@ const createAuthor = author => {
   return author
 }
 
+const deleteAuthor = id => {
+  console.log(id)
+  ref.child(id).set(null, e => {
+    if (e)
+      return false  
+    else 
+      return true
+  })
+  return true
+}
+
 module.exports = {
   Authors,
-  createAuthor
+  createAuthor,
+  deleteAuthor
 }; 
