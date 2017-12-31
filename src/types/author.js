@@ -19,8 +19,8 @@ const AuthorType = new GraphQLObjectType({
 const AuthorInputType = new GraphQLInputObjectType({
   name: "AuthorInput",
   fields: () => ({
-    firstName : { type: new GraphQLNonNull(GraphQLString) },
-    lastName : { type: new GraphQLNonNull(GraphQLString) },
+    firstName : { type: GraphQLString },
+    lastName : { type: GraphQLString },
     twitterHandle : { type: GraphQLString, defaultValue: "" }
   })
 })

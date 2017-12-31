@@ -1,6 +1,6 @@
 const _ = require('lodash');
 
-const {Authors, createAuthor, deleteAuthor} = require('./data/authors'); // This is to make available authors.json file
+const {Authors, createAuthor, deleteAuthor, updateAuthor} = require('./data/authors'); // This is to make available authors.json file
 const Posts = require('./data/posts'); // This is to make available post.json file
 
 const {AuthorType, AuthorInputType} = require('./types/author');
@@ -58,16 +58,20 @@ const MutationRootType = new GraphQLObjectType({
       }
     },
     UpdateAuthor: {
-      type: AuthorType,
+      type: GraphQLBoolean,
       description: "Update a author",
       args: {
           author: { type: AuthorInputType },
           id: { type: GraphQLID}
       },
       resolve: function(source, args, context, info){
-        args.author.id = args.id
-        console.log(args.author)
-        return args.author
+        let response = updateAuthor(args.author, args.id)
+        response.then((data) => {
+          if (data.val())
+            return true
+          else
+            return false
+        })
       }
     },
     deleteAuthor: {

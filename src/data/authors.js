@@ -45,7 +45,6 @@ const createAuthor = author => {
 }
 
 const deleteAuthor = id => {
-  console.log(id)
   ref.child(id).set(null, e => {
     if (e)
       return false  
@@ -55,8 +54,17 @@ const deleteAuthor = id => {
   return true
 }
 
+const updateAuthor = (author, id) => {
+  const authorRef = ref.child(id)
+  return authorRef.once("value", (snapshot)=> {
+    if (snapshot.val())
+      authorRef.update(author)
+  })
+}
+
 module.exports = {
   Authors,
   createAuthor,
-  deleteAuthor
+  deleteAuthor,
+  updateAuthor
 }; 
