@@ -36,7 +36,7 @@ ref.once("value", (snapshot) => {
 });
 
 const createAuthor = author => {
-  ref.child(author.firstName+'-'+author.lastName).set({
+  let newPushRef = ref.push({
     firstName: author.firstName,
     lastName: author.lastName,
     twitterHandle: author.twitterHandle
