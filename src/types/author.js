@@ -1,7 +1,8 @@
 let {
   GraphQLString,
   GraphQLObjectType,
-  GraphQLNonNull
+  GraphQLNonNull,
+  GraphQLInputObjectType
 } = require('graphql');
 
 const AuthorType = new GraphQLObjectType({
@@ -15,4 +16,16 @@ const AuthorType = new GraphQLObjectType({
     })
 });
 
-module.exports = AuthorType;
+const AuthorInputType = new GraphQLInputObjectType({
+  name: "AuthorInput",
+  fields: () => ({
+    firstName : { type: new GraphQLNonNull(GraphQLString) },
+    lastName : { type: new GraphQLNonNull(GraphQLString) },
+    twitterHandle : { type: GraphQLString, defaultValue: "" }
+  })
+})
+
+module.exports = {
+  AuthorType,
+  AuthorInputType
+};

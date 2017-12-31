@@ -1,7 +1,7 @@
 const _ = require('lodash');
 
 const Authors = require('../data/authors');
-const AuthorType = require('./author');
+const {AuthorType} = require('./author');
 let {
   GraphQLString,
   GraphQLObjectType,

@@ -3,7 +3,7 @@ const _ = require('lodash');
 const Authors = require('./data/authors'); // This is to make available authors.json file
 const Posts = require('./data/posts'); // This is to make available post.json file
 
-const AuthorType = require('./types/author');
+const {AuthorType, AuthorInputType} = require('./types/author');
 const PostType = require('./types/post');
 let {
   // These are the basic GraphQL types need in this tutorial
@@ -40,14 +40,7 @@ const QueryRootType = new GraphQLObjectType({
     })
   });
 
-let AuthorInput = new GraphQLInputObjectType({
-  name: "AuthorInput",
-  fields: {
-    firstName : { type: new GraphQLNonNull(GraphQLString) },
-    lastName : { type: new GraphQLNonNull(GraphQLString) },
-    twitterHandle : { type: GraphQLString, defaultValue: "" }
-  }
-})
+
 
 const MutationRootType = new GraphQLObjectType({
   name: 'MutationRootType',
@@ -55,29 +48,26 @@ const MutationRootType = new GraphQLObjectType({
   fields: {
     createAuthor: {
       type: AuthorType,
-      args: {
-          firstName : { type: new GraphQLNonNull(GraphQLString) },
-          lastName : { type: new GraphQLNonNull(GraphQLString) },
-          twitterHandle : { type: GraphQLString, defaultValue: "" }
-      },
       description: "Create a author",
+      args: {
+          author: { type: AuthorInputType }
+      },
       resolve: function(source, args, context, info){
         console.log(args)
-        return args;
+        return args.author
       }
     },
     UpdateAuthor: {
       type: AuthorType,
+      description: "Update a author",
       args: {
-          firstName : { type: new GraphQLNonNull(GraphQLString) },
-          lastName : { type: new GraphQLNonNull(GraphQLString) },
-          twitterHandle : { type: GraphQLString, defaultValue: "" },
+          author: { type: AuthorInputType },
           id: { type: GraphQLID}
       },
-      description: "Update a author",
       resolve: function(source, args, context, info){
-        console.log(args)
-        return args;
+        args.author.id = args.id
+        console.log(args.author)
+        return args.author
       }
     }
   }
@@ -87,9 +77,7 @@ const AppSchema = new GraphQLSchema({
     query: QueryRootType,
     mutation: MutationRootType
     // If you need to create or updata a datasource, 
-    // you use mutations. Note:
-    // mutations will not be explored in this post.
-    // mutation: BlogMutationRootType 
+    // you use mutations.
   });
 
 module.exports = AppSchema
