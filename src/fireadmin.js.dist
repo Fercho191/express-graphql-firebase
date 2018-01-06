@@ -1,0 +1,13 @@
+const admin = require('firebase-admin')
+
+let serviceAccount = require('secretKeyFirebase.json PATH')
+
+const firebase = admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "Graphql-database-url"
+});
+
+let firebaseAuth = firebase.auth();
+let firebaseDB = firebase.database();
+
+module.exports = firebaseDB

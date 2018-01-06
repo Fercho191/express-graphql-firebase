@@ -1,15 +1,18 @@
 const _ = require('lodash');
 
-const Authors = require('./data/authors'); // This is to make available authors.json file
+const {Authors, createAuthor, deleteAuthor, updateAuthor} = require('./data/authors'); // This is to make available authors.json file
 const Posts = require('./data/posts'); // This is to make available post.json file
 
-const AuthorType = require('./types/author');
+const {AuthorType, AuthorInputType} = require('./types/author');
 const PostType = require('./types/post');
 let {
   // These are the basic GraphQL types need in this tutorial
   GraphQLString,
   GraphQLList,
   GraphQLObjectType,
+  GraphQLInputObjectType,
+  GraphQLID,
+  GraphQLBoolean,
   // This is used to create required fileds and arguments
   GraphQLNonNull,
   // This is the class we need to create the schema
@@ -38,13 +41,57 @@ const QueryRootType = new GraphQLObjectType({
     })
   });
 
+
+
+const MutationRootType = new GraphQLObjectType({
+  name: 'MutationRootType',
+  description: "Application Schema Mutation Root",
+  fields: {
+    createAuthor: {
+      type: AuthorType,
+      description: "Create a author",
+      args: {
+          author: { type: AuthorInputType }
+      },
+      resolve: function(source, args, context, info){
+        return createAuthor(args.author)
+      }
+    },
+    UpdateAuthor: {
+      type: GraphQLBoolean,
+      description: "Update a author",
+      args: {
+          author: { type: AuthorInputType },
+          id: { type: GraphQLID}
+      },
+      resolve: function(source, args, context, info){
+        let response = updateAuthor(args.author, args.id)
+        response.then((data) => {
+          if (data.val())
+            return true
+          else
+            return false
+        })
+      }
+    },
+    deleteAuthor: {
+      type: GraphQLBoolean,
+      description: "Delete a author",
+      args: {
+        id: {type:  GraphQLString, name: "success" } 
+      },
+      resolve: function(source, args, context, info){
+        return deleteAuthor(args.id)
+      }
+    }
+  }
+});
   // This is the schema declaration
 const AppSchema = new GraphQLSchema({
-    query: QueryRootType
+    query: QueryRootType,
+    mutation: MutationRootType
     // If you need to create or updata a datasource, 
-    // you use mutations. Note:
-    // mutations will not be explored in this post.
-    // mutation: BlogMutationRootType 
+    // you use mutations.
   });
 
 module.exports = AppSchema
