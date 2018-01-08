@@ -1,6 +1,6 @@
 const _ = require('lodash');
 
-const {Authors} = require('../data/authors');
+const AuthorModel = require('../models/authorModel');
 const {AuthorType} = require('./author');
 let {
   GraphQLString,
@@ -9,6 +9,8 @@ let {
   GraphQLNonNull,
   GraphQLID,
 } = require('graphql');
+
+const Author = new AuthorModel()
 
 const PostType = new GraphQLObjectType({
     name: "Post",
@@ -20,7 +22,7 @@ const PostType = new GraphQLObjectType({
       author: {
         type: AuthorType,
         resolve: function(post) {
-          return _.find(Authors, a => a.id == post.author_id);
+          return _.find(Author.getData(), a => a.id == post.authorId);
         }
       }
     })
@@ -31,7 +33,7 @@ const PostInputType = new GraphQLInputObjectType({
   fields: () => ({
     title : { type: GraphQLString },
     body : { type: GraphQLString, defaultValue: "" },
-    author_id : { type: GraphQLID}
+    authorId : { type: GraphQLID}
   })
 })
 
