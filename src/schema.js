@@ -1,10 +1,12 @@
 const _ = require('lodash');
 
-const {Authors, createAuthor, deleteAuthor, updateAuthor} = require('./data/authors'); // This is to make available authors.json file
 const {Posts, createPost} = require('./data/posts'); // This is to make available post.json file
 
 const {AuthorType, AuthorInputType} = require('./types/author');
 const {PostType, PostInputType} = require('./types/post');
+
+const AuthorModel = require('./models/authorModel');
+
 let {
   // These are the basic GraphQL types need in this tutorial
   GraphQLString,
@@ -19,6 +21,8 @@ let {
   GraphQLSchema,
 } = require('graphql');
 
+const Author = new AuthorModel();
+
   // This is the Root Query
 const QueryRootType = new GraphQLObjectType({
     name: 'QueryRootType',
@@ -28,7 +32,7 @@ const QueryRootType = new GraphQLObjectType({
         type: new GraphQLList(AuthorType),
         description: "List of all Authors",
         resolve: function() {
-          return Authors
+          return Author.getData()
         }
       },
       posts: {
@@ -64,7 +68,7 @@ const MutationRootType = new GraphQLObjectType({
           author: { type: AuthorInputType }
       },
       resolve: function(source, args, context, info){
-        return createAuthor(args.author)
+        return Author.createAuthor(args.author)
       }
     },
     UpdateAuthor: {
@@ -75,7 +79,7 @@ const MutationRootType = new GraphQLObjectType({
           id: { type: GraphQLID}
       },
       resolve: function(source, args, context, info){
-        let response = updateAuthor(args.author, args.id)
+        let response = Author.updateAuthor(args.author, args.id)
         response.then((data) => {
           if (data.val())
             return true
@@ -91,7 +95,7 @@ const MutationRootType = new GraphQLObjectType({
         id: {type:  GraphQLString, name: "success" } 
       },
       resolve: function(source, args, context, info){
-        return deleteAuthor(args.id)
+        return Author.deleteAuthor(args.id)
       }
     }
   }
