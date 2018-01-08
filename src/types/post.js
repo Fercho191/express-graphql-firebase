@@ -5,7 +5,9 @@ const {AuthorType} = require('./author');
 let {
   GraphQLString,
   GraphQLObjectType,
-  GraphQLNonNull
+  GraphQLInputObjectType,
+  GraphQLNonNull,
+  GraphQLID,
 } = require('graphql');
 
 const PostType = new GraphQLObjectType({
@@ -24,4 +26,16 @@ const PostType = new GraphQLObjectType({
     })
 });
 
-module.exports = PostType;
+const PostInputType = new GraphQLInputObjectType({
+  name: "PostInput",
+  fields: () => ({
+    title : { type: GraphQLString },
+    body : { type: GraphQLString, defaultValue: "" },
+    author_id : { type: GraphQLID}
+  })
+})
+
+module.exports = {
+  PostType,
+  PostInputType
+};

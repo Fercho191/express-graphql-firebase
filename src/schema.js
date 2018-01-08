@@ -1,10 +1,10 @@
 const _ = require('lodash');
 
 const {Authors, createAuthor, deleteAuthor, updateAuthor} = require('./data/authors'); // This is to make available authors.json file
-const Posts = require('./data/posts'); // This is to make available post.json file
+const {Posts, createPost} = require('./data/posts'); // This is to make available post.json file
 
 const {AuthorType, AuthorInputType} = require('./types/author');
-const PostType = require('./types/post');
+const {PostType, PostInputType} = require('./types/post');
 let {
   // These are the basic GraphQL types need in this tutorial
   GraphQLString,
@@ -47,6 +47,16 @@ const MutationRootType = new GraphQLObjectType({
   name: 'MutationRootType',
   description: "Application Schema Mutation Root",
   fields: {
+    createPost: {
+      type: PostType,
+      description: "Create a Post",
+      args: {
+        post: { type: PostInputType }
+      },
+      resolve: function(source, args, context, info){
+        return createPost(args.post)
+      }
+    },
     createAuthor: {
       type: AuthorType,
       description: "Create a author",

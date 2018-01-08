@@ -35,4 +35,17 @@ ref.once("value", (snapshot) => {
   console.log("Posts data loaded:", snapshot.numChildren() === Posts.length);
 });
 
-module.exports = Posts;
+const createPost = post => {
+  let newPushRef = ref.push({
+    title: post.title,
+    body: post.body,
+    author_id: post.author_id
+  })
+  return post
+}
+
+
+module.exports = {
+  Posts,
+  createPost
+};
