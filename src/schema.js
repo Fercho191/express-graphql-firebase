@@ -1,5 +1,3 @@
-const _ = require("lodash");
-
 const { AuthorType, AuthorInputType } = require("./types/author");
 const { PostType, PostInputType } = require("./types/post");
 
